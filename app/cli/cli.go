@@ -23,11 +23,37 @@ func AddProductCLI(db *sql.DB) {
 	handler.AddProduct(db, product)
 }
 
+func UpdateStockCLI(db *sql.DB) {
+	var id, stockChange int
+	fmt.Println("Enter product ID to update stock:")
+	fmt.Scanln(&id)
+	fmt.Println("Enter stock change amount (+ to add, - to reduce):")
+	fmt.Scanln(&stockChange)
+
+	handler.UpdateStock(db, id, stockChange)
+}
+
+func AddStaffCLI(db *sql.DB) {
+	var name, email, position string
+
+	fmt.Println("Enter staff name:")
+	fmt.Scanln(&name)
+	fmt.Println("Enter staff email:")
+	fmt.Scanln(&email)
+	fmt.Println("Enter staff position:")
+	fmt.Scanln(&position)
+
+	staff := entity.Staff{Name: name, Email: email, Position: position}
+	handler.AddStaff(db, staff)
+}
+
 func RunCLI(db *sql.DB) {
 	for {
 		fmt.Println("\nMenu:")
 		fmt.Println("1. Add Product")
-		fmt.Println("5. Exit")
+		fmt.Println("2. Update Product Stock")
+		fmt.Println("3. Add Staff")
+		fmt.Println("4. Exit")
 		var choice int
 		fmt.Scanln(&choice)
 
@@ -35,7 +61,11 @@ func RunCLI(db *sql.DB) {
 		case 1:
 			AddProductCLI(db)
 		case 2:
-			fmt.Println("exit")
+			UpdateStockCLI(db)
+		case 3:
+			AddStaffCLI(db)
+		case 4:
+			fmt.Println("Exit")
 			return
 		}
 	}
