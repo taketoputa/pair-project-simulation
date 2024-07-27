@@ -71,7 +71,10 @@ func SalesRecapCLI(db *sql.DB) {
 	}
 
 	//display the result
-	fmt.Printf()
+	fmt.Printf("Sales Recap from %s to %s\n", startDate.Format("2006-01-02"), endDate.Format("2006-01-02"))
+	fmt.Printf("Total Sales : %d\n", totalSales)
+	fmt.Printf("Total items Sold : %d\n", totalItemsSold)
+	fmt.Printf("Total Revenue : %.2f\n", totalRevenue)
 }
 
 func RunCLI(db *sql.DB) {
