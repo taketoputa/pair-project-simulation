@@ -3,8 +3,10 @@ package cli
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"pair-project/entity"
 	"pair-project/handler"
+	"time"
 )
 
 func AddProductCLI(db *sql.DB) {
@@ -47,13 +49,39 @@ func AddStaffCLI(db *sql.DB) {
 	handler.AddStaff(db, staff)
 }
 
+func SalesRecapCLI(db *sql.DB) {
+	var startDateStr, endDateStr string
+	fmt.Println("Enter start date (YYYY-MM-DD):")
+	fmt.Scanln(&startDateStr)
+	fmt.Println("Enter end date (YYYY-MM-DD):")
+	fmt.Scanln(&endDateStr)
+
+	startDate, err := time.Parse("2006-01-02", startDateStr)
+	if err != nil {
+		log.Fatalf("Invalid start date : %v", err)
+	}
+	endDate, err := time.Parse("2006-01-02", endDateStr)
+	if err != nil {
+		log.Fatalf("Invalid end date : %v", err)
+	}
+
+	totalSales, totalItemsSold, totalRevenue, err := handler.SalesRecap(db, startDate, endDate)
+	if err != nil {
+		log.Fatalf("Failed to get sales Recap: %v", err)
+	}
+
+	//display the result
+	fmt.Printf()
+}
+
 func RunCLI(db *sql.DB) {
 	for {
 		fmt.Println("\nMenu:")
 		fmt.Println("1. Add Product")
 		fmt.Println("2. Update Product Stock")
 		fmt.Println("3. Add Staff")
-		fmt.Println("4. Exit")
+		fmt.Println("4. Sales Recap")
+		fmt.Println("5. Exit")
 		var choice int
 		fmt.Scanln(&choice)
 
@@ -65,6 +93,8 @@ func RunCLI(db *sql.DB) {
 		case 3:
 			AddStaffCLI(db)
 		case 4:
+			SalesRecapCLI(db)
+		case 5:
 			fmt.Println("Exit")
 			return
 		}
