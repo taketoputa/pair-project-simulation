@@ -112,7 +112,8 @@ func SalesRecapCLI(db *sql.DB) {
 
 	totalSales, totalItemsSold, totalRevenue, err := handler.SalesRecap(db, startDate, endDate)
 	if err != nil {
-		log.Fatalf("No data found for the specified date range: %v", err)
+		fmt.Println("no data found for the specified date range.")
+		return
 	}
 
 	//display the result
