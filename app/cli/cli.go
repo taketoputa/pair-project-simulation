@@ -89,10 +89,10 @@ func AddStaffCLI(db *sql.DB) {
 /*
 *
 Temuan:
-Fungsi Sales Recap Belum bisa Berjalan
+Fungsi Sales Recap Fatal Error dan keluar aplikasi jika tidak ada data ditemukan
 
 Saran:
-Dicoba terlebih dahulu untuk memastikan output tercetak
+Print "No data found for the specified date range."
 */
 func SalesRecapCLI(db *sql.DB) {
 	var startDateStr, endDateStr string
