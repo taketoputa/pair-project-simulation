@@ -14,6 +14,24 @@ func AddProductCLI(db *sql.DB) {
 	var price float64
 	var stock int
 
+	/**
+	- Temuan:
+	Price dan stock apabila dimasukkan input non angka, mengakibatkan insert ke database dengan value 0
+
+	- Saran:
+	Jika price dan stock yang diinput adalah non angka,
+	maka dilooping agar user input angka
+
+	bisa menggunakan loop dengan nama, sehingga breaking loop lebih mudah
+	example:
+	loop1:
+	for true{
+		if condition1 {
+		break loop1 }
+		else { do nothing}
+	}
+	*/
+
 	fmt.Println("Enter product name:")
 	fmt.Scanln(&name)
 	fmt.Println("Enter product price:")
@@ -25,6 +43,18 @@ func AddProductCLI(db *sql.DB) {
 	handler.AddProduct(db, product)
 }
 
+/*
+*
+Temuan:
+  - Apabila user input product ID yang tidak ada di database,
+    secara program tetap melanjutkan, dan tidak ada logging error
+  - stock change apabila dimasukkan input non angka, mengakibatkan insert ke database dengan value 0
+
+Saran:
+  - dibuat validasi, product ID yang diinput memang ada di database,
+    Jika tidak ada bisa dikembalikan ke Menu utama
+  - Sama seperti sebelumnya bisa dibuat validasi
+*/
 func UpdateStockCLI(db *sql.DB) {
 	var id, stockChange int
 	fmt.Println("Enter product ID to update stock:")
@@ -35,6 +65,13 @@ func UpdateStockCLI(db *sql.DB) {
 	handler.UpdateStock(db, id, stockChange)
 }
 
+/*
+*
+Temuan:
+- Clean
+
+Saran:
+*/
 func AddStaffCLI(db *sql.DB) {
 	var name, email, position string
 
@@ -49,6 +86,14 @@ func AddStaffCLI(db *sql.DB) {
 	handler.AddStaff(db, staff)
 }
 
+/*
+*
+Temuan:
+Fungsi Sales Recap Belum bisa Berjalan
+
+Saran:
+Dicoba terlebih dahulu untuk memastikan output tercetak
+*/
 func SalesRecapCLI(db *sql.DB) {
 	var startDateStr, endDateStr string
 	fmt.Println("Enter start date (YYYY-MM-DD):")
