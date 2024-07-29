@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"pair-project/entity"
 	"time"
@@ -32,6 +33,16 @@ func AddStaff(db *sql.DB, staff entity.Staff) {
 		log.Fatal(err)
 	}
 	log.Println("Staff added successfully")
+}
+
+func ProductExists(db *sql.DB, id int) bool {
+	var exists bool
+	query := "SELECT EXISTS (SELECT 1 FROM products WHERE id = ?)"
+	err := db.QueryRow(query, id).Scan(&exists)
+	if err != nil && err != sql.ErrNoRows {
+		fmt.Println("Error checking if product exists:", err)
+	}
+	return exists
 }
 
 func SalesRecap(db *sql.DB, startDate, endDate time.Time) (int, int, float64, error) {

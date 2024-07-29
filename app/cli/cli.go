@@ -6,6 +6,7 @@ import (
 	"log"
 	"pair-project/entity"
 	"pair-project/handler"
+	"strconv"
 	"time"
 )
 
@@ -14,53 +15,72 @@ func AddProductCLI(db *sql.DB) {
 	var price float64
 	var stock int
 
-	/**
-	- Temuan:
-	Price dan stock apabila dimasukkan input non angka, mengakibatkan insert ke database dengan value 0
-
-	- Saran:
-	Jika price dan stock yang diinput adalah non angka,
-	maka dilooping agar user input angka
-
-	bisa menggunakan loop dengan nama, sehingga breaking loop lebih mudah
-	example:
-	loop1:
-	for true{
-		if condition1 {
-		break loop1 }
-		else { do nothing}
-	}
-	*/
-
 	fmt.Println("Enter product name:")
 	fmt.Scanln(&name)
-	fmt.Println("Enter product price:")
-	fmt.Scanln(&price)
-	fmt.Println("Enter product stock:")
-	fmt.Scanln(&stock)
+
+	// validation for price input
+	for {
+		fmt.Println("Enter product price:")
+		var priceInput string
+		fmt.Scanln(&priceInput)
+		if p, err := strconv.ParseFloat(priceInput, 64); err == nil {
+			price = p
+			break
+		} else {
+			fmt.Println("Invalid input. Please enter a numeric value for price.")
+		}
+	}
+
+	// validation for stock input
+	for {
+		fmt.Println("Enter product stock:")
+		var stockInput string
+		fmt.Scanln(&stockInput)
+		if s, err := strconv.Atoi(stockInput); err == nil {
+			stock = s
+			break
+		} else {
+			fmt.Println("Invalid input. Please enter a numeric value for stock.")
+		}
+	}
 
 	product := entity.Product{Name: name, Price: price, Stock: stock}
 	handler.AddProduct(db, product)
 }
 
-/*
-*
-Temuan:
-  - Apabila user input product ID yang tidak ada di database,
-    secara program tetap melanjutkan, dan tidak ada logging error
-  - stock change apabila dimasukkan input non angka, mengakibatkan insert ke database dengan value 0
-
-Saran:
-  - dibuat validasi, product ID yang diinput memang ada di database,
-    Jika tidak ada bisa dikembalikan ke Menu utama
-  - Sama seperti sebelumnya bisa dibuat validasi
-*/
 func UpdateStockCLI(db *sql.DB) {
 	var id, stockChange int
-	fmt.Println("Enter product ID to update stock:")
-	fmt.Scanln(&id)
-	fmt.Println("Enter stock change amount (+ to add, - to reduce):")
-	fmt.Scanln(&stockChange)
+
+	// validation for product ID input
+	for {
+		fmt.Println("Enter product ID to update stock:")
+		var idInput string
+		fmt.Scanln(&idInput)
+		if i, err := strconv.Atoi(idInput); err == nil {
+			id = i
+			// cek ID, exists or not
+			if handler.ProductExists(db, id) {
+				break
+			} else {
+				fmt.Println("Product ID does not exist. Please enter a valid product ID.")
+			}
+		} else {
+			fmt.Println("Invalid input. Please enter a numeric value for product ID.")
+		}
+	}
+
+	// validation for check input
+	for {
+		fmt.Println("Enter stock change amount (+ to add, - to reduce):")
+		var stockChangeInput string
+		fmt.Scanln(&stockChangeInput)
+		if sc, err := strconv.Atoi(stockChangeInput); err == nil {
+			stockChange = sc
+			break
+		} else {
+			fmt.Println("Invalid input. Please enter a numeric value for stock change.")
+		}
+	}
 
 	handler.UpdateStock(db, id, stockChange)
 }
